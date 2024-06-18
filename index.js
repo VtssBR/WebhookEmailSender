@@ -4,11 +4,12 @@ const nodemailer = require('nodemailer');
 const axios = require('axios');
 
 const app = express();
+
 app.use(express.json());
 
 app.post('/webhook', (req, res) => {
     const data = req.body;
-
+    
     try {
         // Exibir os dados recebidos no console
         console.log('Dados recebidos do webhook:', data);
