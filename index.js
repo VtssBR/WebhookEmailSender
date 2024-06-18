@@ -6,15 +6,20 @@ const axios = require('axios');
 const app = express();
 app.use(express.json());
 
-app.post('/webhook',(req, res) => {
+app.post('/webhook', (req, res) => {
     const data = req.body;
-    res.console.log(data)
 
     try {
-     res.status(200).send('Webhook received and email sent');
-        } catch (error) {
-     res.status(500).send('Error: ' + error.message);
+        // Exibir os dados recebidos no console
+        console.log('Dados recebidos do webhook:', data);
+
+        // Responder com um status 200 e uma mensagem simples
+        res.status(200).send('Webhook received successfully');
+    } catch (error) {
+        // Se ocorrer algum erro, responder com um status 500 e a mensagem de erro
+        res.status(500).send('Error: ' + error.message);
     }
+});
 
     // const data = req.body;
 
@@ -36,7 +41,6 @@ app.post('/webhook',(req, res) => {
     // } catch (error) {
     //     res.status(500).send('Error: ' + error.message);
     // }
-});
 
 // async function sendEmail(toEmail, link) {
 //     let transporter = nodemailer.createTransport({
