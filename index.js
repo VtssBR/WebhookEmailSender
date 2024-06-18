@@ -11,11 +11,10 @@ app.post('/webhook', (req, res) => {
     
     const data = req.body;
 
-    const customerEmail = data.cus_email || data.student_email;
 
     try {
         // Exibir os dados recebidos no console
-        console.log('Email recebido do Webhook:', customerEmail);
+        console.log('Dados recebidos:', data);
 
         // Responder com um status 200 e uma mensagem simples
         res.status(200).send('Webhook received successfully');
