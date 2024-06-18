@@ -8,11 +8,14 @@ const app = express();
 app.use(express.json());
 
 app.post('/webhook', (req, res) => {
-    const data = req.body;
     
+    const data = req.body;
+
+    const customerEmail = data.cus_email || data.student_email;
+
     try {
         // Exibir os dados recebidos no console
-        console.log('Dados recebidos do webhook:', data);
+        console.log('Email recebido do Webhook:', customerEmail);
 
         // Responder com um status 200 e uma mensagem simples
         res.status(200).send('Webhook received successfully');
