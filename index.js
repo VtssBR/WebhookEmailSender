@@ -7,79 +7,60 @@ const app = express();
 
 app.use(express.json());
 
-app.post('/webhook', (req, res) => {
-    
-    const data = req.body;
-
-
-    try {
-        // Exibir os dados recebidos no console
-        console.log('Dados recebidos:', data);
-
-        // Responder com um status 200 e uma mensagem simples
-        res.status(200).send('Webhook received successfully');
-    } catch (error) {
-        // Se ocorrer algum erro, responder com um status 500 e a mensagem de erro
-        res.status(500).send('Error: ' + error.message);
-    }
+app.get('/webhook', (req, res) => {
+    res.send('Esta é a rota do webhook. Atualmente, não há solicitações POST sendo processadas.');
 });
 
-    // const data = req.body;
+app.post('/webhook', async (req, res) => {
+    const data = req.body;
 
-    // // Extrair email do cliente dos dados do webhook
-    // const customerEmail = data.cus_email || data.student_email;
+    const customerEmail = data.cus_email || data.student_email
+    
+    console.log('email recebido: ', customerEmail);
 
-    // if (!customerEmail) {
-    //     return res.status(400).send('Email do cliente não encontrado no payload');
-    // }
+    if (!customerEmail) {
+     return res.status(400).send('Email do cliente não encontrado no payload');
+    }
+    res.status(200).send('Webhook processado com sucesso');
 
-    // try {
-    //     // Gerar link de convite do Telegram
-    //     const telegramLink = await generateTelegramLink();
+    let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth:{
+            user: "vitorsouzasilva1324@gmail.com",
+            pass: "qsyx jwtg ntei gmqd"
+        }
+    })
 
-    //     // Enviar email com o link do Telegram
-    //     await sendEmail(customerEmail, telegramLink);
+    const mailOptions = {
+        from: "vitorsouzasilva1324@gmail.com",
+        to: customerEmail,
+        subject: 'Seu link para o grupo do Telegram',
+        text: `Olá, aqui está seu link para o grupo do Telegram:`
+    };
 
-    //     res.status(200).send('Webhook received and email sent');
-    // } catch (error) {
-    //     res.status(500).send('Error: ' + error.message);
-    // }
+    const sendEmail = async () => {
+        try{
+            console.log("enviando email")
+            await transporter.sendMail(mailOptions);
+            console.log("Email enviado")
+            process.exit()
+        } catch(error){
+            console.log("Deu erro")
+            console.log(error)
+        }
+    }
 
-// async function sendEmail(toEmail, link) {
-//     let transporter = nodemailer.createTransport({
-//         service: 'gmail',
-//         auth: {
-//             user: process.env.EMAIL_USER,
-//             pass: process.env.EMAIL_PASS
-//         }
-//     });
+    sendEmail()
 
-//     let mailOptions = {
-//         from: process.env.EMAIL_USER,
-//         to: toEmail,
-//         subject: 'Confirmação de Compra',
-//         text: `Obrigado por sua compra! Clique no link para acessar o grupo do Telegram: ${link}`
-//     };
+});
 
-//     await transporter.sendMail(mailOptions);
-// }
+app.get('/', (req, res) => {
+    res.send('Webhook Email Sender.');
+});
 
-// async function generateTelegramLink() {
-//     const botToken = process.env.TELEGRAM_BOT_TOKEN;
-//     const chatId = process.env.TELEGRAM_GROUP_CHAT_ID;
-
-//     const response = await axios.post(`https://api.telegram.org/bot${botToken}/createChatInviteLink`, {
-//         chat_id: chatId,
-//         expire_date: Math.floor(Date.now() / 1000) + 86400, // Link válido por 24 horas
-//         member_limit: 1 // O link só pode ser usado uma vez
-//     });
-
-//     if (response.data.ok) {
-//         return response.data.result.invite_link;
-//     } else {
-//         throw new Error('Failed to generate Telegram invite link');
-//     }
-// }
+app.use((req, res, next) => {
+    res.status(404).send('Página não encontrada. Por favor, verifique o endereço e tente novamente.');
+});
 
 app.listen(process.env.PORT, () => {
     console.log('Server started at port:'+process.env.PORT);
