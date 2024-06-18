@@ -13,7 +13,7 @@ app.use(express.json());
 async function generateTelegramInviteLink(chatId) {
     try {
         const inviteLink = await bot.telegram.createChatInviteLink(chatId, {
-            member_limit: 1 // Limite de 1 uso
+            member_limit: 1 
         });
         return inviteLink.invite_link;
     } catch (error) {
@@ -23,7 +23,7 @@ async function generateTelegramInviteLink(chatId) {
 }
 
 app.get('/webhook', (req, res) => {
-    res.send('Esta é a rota do webhook. Atualmente, não há solicitações POST sendo processadas.');
+    res.send('.');
 });
 
 app.post('/webhook', async (req, res) => {
