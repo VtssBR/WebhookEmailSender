@@ -26,13 +26,13 @@ app.post('/webhook', async (req, res) => {
     let transporter = nodemailer.createTransport({
         service: "gmail",
         auth:{
-            user: "vitorsouzasilva1324@gmail.com",
-            pass: "qsyx jwtg ntei gmqd"
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
         }
     })
 
     const mailOptions = {
-        from: "vitorsouzasilva1324@gmail.com",
+        from: process.env.EMAIL_USER,
         to: customerEmail,
         subject: 'Seu link para o grupo do Telegram',
         text: `Olá, aqui está seu link para o grupo do Telegram:`
