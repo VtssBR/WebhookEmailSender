@@ -1,13 +1,13 @@
 require('dotenv').config();
 const express = require('express');
-app.use(express.json());
 const nodemailer = require('nodemailer');
 const axios = require('axios');
 
 const app = express();
 
+app.use(express.json());
 
-app.post('/webhook', async (req, res) => {
+app.post('/webhook', (req, res) => {
     const data = req.body;
     
     try {
