@@ -6,15 +6,24 @@ const axios = require('axios');
 const app = express();
 app.use(express.json());
 
-app.post('/webhook', async (req, res) => {
+app.post('/webhook',(req, res) => {
     const data = req.body;
+    res.console.log(data)
 
-    // Extrair email do cliente dos dados do webhook
-    const customerEmail = data.cus_email || data.student_email;
-
-    if (!customerEmail) {
-        return res.status(400).send('Email do cliente não encontrado no payload');
+    try {
+     res.status(200).send('Webhook received and email sent');
+        } catch (error) {
+     res.status(500).send('Error: ' + error.message);
     }
+
+    // const data = req.body;
+
+    // // Extrair email do cliente dos dados do webhook
+    // const customerEmail = data.cus_email || data.student_email;
+
+    // if (!customerEmail) {
+    //     return res.status(400).send('Email do cliente não encontrado no payload');
+    // }
 
     // try {
     //     // Gerar link de convite do Telegram
