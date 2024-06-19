@@ -16,9 +16,11 @@ async function generateTelegramInviteLink(chatId) {
             member_limit: 1, 
             expire_date: Math.floor(Date.now() / 1000) + 86400
         });
+        console.log('Invite link gerado:', inviteLink.invite_link);
         return inviteLink.invite_link;
     } catch (error) {
         console.error('Erro ao gerar link de convite:');
+        throw new Error('Falha ao gerar o link de convite do Telegram');
     }
 }
 
