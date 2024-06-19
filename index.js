@@ -19,7 +19,6 @@ async function generateTelegramInviteLink(chatId) {
         return inviteLink.invite_link;
     } catch (error) {
         console.error('Erro ao gerar link de convite:');
-        throw new Error('Não foi possível gerar o link de convite do Telegram.');
     }
 }
 
@@ -30,8 +29,6 @@ app.get('/webhook', (req, res) => {
 app.post('/webhook', async (req, res) => {
     
     const dataJson = req.body;
-
-    console.log(dataJson);
     const eventName = dataJson.event;
     const studentName = dataJson.data.buyer.name;
     const customerEmail = dataJson.data.buyer.email;
