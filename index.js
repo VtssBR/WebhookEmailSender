@@ -13,29 +13,32 @@ app.use(express.json());
 async function generateTelegramInviteLink(chatId) {
     try {
         const inviteLink = await bot.telegram.createChatInviteLink(chatId, {
-            member_limit: 1 
+            member_limit: 1, 
+            expire_date: Math.floor(Date.now() / 1000) + 86400
         });
         return inviteLink.invite_link;
     } catch (error) {
-        console.error('Erro ao gerar link de convite:', error);
+        console.error('Erro ao gerar link de convite:');
         throw new Error('Não foi possível gerar o link de convite do Telegram.');
     }
 }
 
 app.get('/webhook', (req, res) => {
-    res.send('.');
+    res.send('WEBHOOK EMAIL SENDER');
 });
 
 app.post('/webhook', async (req, res) => {
     
     const data = req.body;
-    const eventName = data.event_name;
-    const customerEmail = data.cus_email || data.student_email
+    const eventName = data.event.myeduzz.invoice_paid;
+    const studentName = data.buyer.name;
+    const customerEmail = data.buyer.email;
     
     console.log('Evento recebido: ', eventName);
+    console.log('Nome recebido: ', studentName);
     console.log('email recebido: ', customerEmail);
 
-    if (!eventName || eventName !== 'invoice_paid') {
+    if (!eventName || eventName !== 'myeduzz.invoice_paid') {
         return res.status(400).send('Evento não é invoice_paid ou está faltando no payload');
         
     }
@@ -56,20 +59,51 @@ app.post('/webhook', async (req, res) => {
     })
 
     const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: "Vitor",
         to: customerEmail,
-        subject: 'Seu link para o grupo do Telegram',
-        text: `Olá, aqui está seu link para o grupo do Telegram: ${inviteLink}`
-    };
+        subject: 'Bem-vindo ao Grupo Exclusivo de Ofertas da Jmarques!',
+        html: `
+        <p><strong>Olá ${studentName}</strong>,</p>
+
+        <p>Primeiramente, queremos agradecer pela sua recente compra. Você agora faz parte
+        do nosso grupo exclusivo, onde compartilhamos ofertas e promoções especiais.</p>
+
+        <p>Estamos muito felizes em tê-lo conosco e queremos garantir que você aproveite ao
+        máximo todos os benefícios que preparamos para você. Para acessar essas
+        vantagens, siga os passos abaixo para ingressar no nosso grupo exclusivo no
+        Telegram:</p>
+
+        <ol>
+            <li><strong>Acesse o Link Exclusivo:</strong><br>
+                Clique no link abaixo para ingressar no grupo exclusivo:<br>
+                <a href="${inviteLink}">Link Exclusivo do Grupo</a>
+            </li>
+        </ol>
+
+        <p><strong>Dicas para Aproveitar ao Máximo:</strong></p>
+        <ul>
+            <li>Ative as notificações do grupo para não perder nenhuma oferta exclusiva.</li>
+            <li>Fique atento às mensagens, onde compartilhamos as ofertas mais importantes.</li>
+        </ul>
+
+        <p>Se você tiver qualquer dúvida ou precisar de assistência, estamos aqui para ajudar!
+        Basta nos enviar um e-mail para <a href="mailto:suporte@jmarquesrepasse.com.br">suporte@jmarquesrepasse.com.br</a> e
+        responderemos o mais rápido possível.</p>
+
+        <p>Por fim, mais uma vez, obrigado por sua confiança.</p>
+
+        <p>Um grande abraço,<br>
+        Jmarques</p>
+    `
+};
 
     const sendEmail = async () => {
         try{
-            console.log("enviando email")
+            console.log("Enviando email")
             await transporter.sendMail(mailOptions);
             console.log("Email enviado")
         } catch(error){
-            console.log("Deu erro")
-            console.log(error)
+            console.log("Erro ao enviar email")
         }
     }
 
@@ -78,7 +112,7 @@ app.post('/webhook', async (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.send('Webhook Email Sender.');
+    res.send('INICIO');
 });
 
 app.use((req, res, next) => {
