@@ -29,10 +29,10 @@ app.get('/webhook', (req, res) => {
 
 app.post('/webhook', async (req, res) => {
     
-    const data = req.body;
-    const eventName = data.event.myeduzz.invoice_paid;
-    const studentName = data.buyer.name;
-    const customerEmail = data.buyer.email;
+    const dataJson = req.body;
+    const eventName = dataJson.event;
+    const studentName = dataJson.data.buyer.name;
+    const customerEmail = dataJson.data.buyer.email;
     
     console.log('Evento recebido: ', eventName);
     console.log('Nome recebido: ', studentName);
