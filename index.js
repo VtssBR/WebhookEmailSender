@@ -15,20 +15,20 @@ app.get('/webhook', (req, res) => {
     res.send('WEBHOOK EMAIL SENDER');
 });
 
-async function generateTelegramInviteLink(chatId) {
-    try {
-        const inviteLink = await bot.telegram.createChatInviteLink(chatId, {
-            member_limit: 1, 
-        });
-        console.log('Link gerado:', inviteLink.invite_link);
-        return inviteLink.invite_link;
-    } catch (error) {
-        console.error('Erro ao gerar link de convite:');
-        throw new Error('Falha ao gerar o link de convite do Telegram');
-    }
-}
-
 app.post('/webhook', async (req, res) => {
+    
+    async function generateTelegramInviteLink(chatId) {
+        try {
+            const inviteLink = await bot.telegram.createChatInviteLink(chatId, {
+                member_limit: 1, 
+            });
+            console.log('Link gerado:', inviteLink.invite_link);
+            return inviteLink.invite_link;
+        } catch (error) {
+            console.error('Erro ao gerar link de convite:');
+            throw new Error('Falha ao gerar o link de convite do Telegram');
+        }
+    }
     
     const dataJson = req.body;
     const eventName = dataJson.event;
