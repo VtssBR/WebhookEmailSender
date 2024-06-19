@@ -10,13 +10,17 @@ const chatId = process.env.CHAT_ID;
 
 app.use(express.json());
 
+
+app.get('/webhook', (req, res) => {
+    res.send('WEBHOOK EMAIL SENDER');
+});
+
 async function generateTelegramInviteLink(chatId) {
     try {
         const inviteLink = await bot.telegram.createChatInviteLink(chatId, {
             member_limit: 1, 
-            expire_date: Math.floor(Date.now() / 1000) + 86400
         });
-        console.log('Invite link gerado:', inviteLink.invite_link);
+        console.log('Link gerado:', inviteLink.invite_link);
         return inviteLink.invite_link;
     } catch (error) {
         console.error('Erro ao gerar link de convite:');
@@ -24,14 +28,9 @@ async function generateTelegramInviteLink(chatId) {
     }
 }
 
-app.get('/webhook', (req, res) => {
-    res.send('WEBHOOK EMAIL SENDER');
-});
-
 app.post('/webhook', async (req, res) => {
     
     const dataJson = req.body;
-    console.log(dataJson);
     const eventName = dataJson.event;
     
     console.log('Evento recebido: ', eventName);
@@ -59,7 +58,6 @@ app.post('/webhook', async (req, res) => {
     res.status(200).send('Webhook processado com sucesso');
 
     const inviteLink = await generateTelegramInviteLink(chatId);
-    console.log(inviteLink);
 
     let transporter = nodemailer.createTransport({
         service: "gmail",
