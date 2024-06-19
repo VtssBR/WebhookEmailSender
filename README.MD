@@ -50,4 +50,4 @@ Para configurar e executar este projeto localmente, siga os passos abaixo:
 
 Após configurar e iniciar a aplicação, verifique se os webhooks estão sendo enviados para http://seu-servidor:porta/webhook. A aplicação irá processar eventos de pagamento, enviará um e-mail com o link de convite do Telegram e logará informações úteis no console para depuração, lembre-se de configurar o bot do telegram e adiciona-lo ao grupo no qual ira utilizar para gerar o link do convite.
 
-Este projeto demonstra a integração entre APIs externas, envio de e-mails e interação com bots do Telegram utilizando Node.js. É uma solução versátil para automatizar processos baseados em eventos externos e comunicação por e-mail.
+Este projeto demonstra a integração entre APIs externas, envio de e-mails e interação com bots do Telegram utilizando Node.js. É uma solução versátil para automatizar processos baseados em eventos externos e comunicação por e-mail junto ao link de acesso.
