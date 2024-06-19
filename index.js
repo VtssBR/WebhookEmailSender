@@ -57,6 +57,7 @@ app.post('/webhook', async (req, res) => {
     res.status(200).send('Webhook processado com sucesso');
 
     const inviteLink = await generateTelegramInviteLink(chatId);
+    console.log(inviteLink);
 
     let transporter = nodemailer.createTransport({
         service: "gmail",
