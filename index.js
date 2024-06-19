@@ -33,8 +33,6 @@ app.post('/webhook', async (req, res) => {
     const eventName = dataJson.event;
     
     console.log('Evento recebido: ', eventName);
-    console.log('Nome recebido: ', studentName);
-    console.log('email recebido: ', customerEmail);
 
     if (eventName === 'ping') {
         console.log('Ping received');
@@ -46,16 +44,16 @@ app.post('/webhook', async (req, res) => {
         
     }
 
-    if (!customerEmail) {
-        return res.status(400).send('Email do cliente não encontrado no payload');
-    }
-
     const studentName = dataJson.data.buyer.name;
     const customerEmail = dataJson.data.buyer.email;
 
     console.log('Nome recebido: ', studentName);
     console.log('email recebido: ', customerEmail);
+
     
+    if (!customerEmail) {
+        return res.status(400).send('Email do cliente não encontrado no payload');
+    }
     res.status(200).send('Webhook processado com sucesso');
 
     const inviteLink = await generateTelegramInviteLink(chatId);
