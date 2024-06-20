@@ -15,7 +15,7 @@ async function generateTelegramInviteLink(chatId) {
         const inviteLink = await bot.telegram.createChatInviteLink(chatId, {
             member_limit: 1, 
         });
-        console.log('Link gerado:');
+        console.log('Link generated');
         return inviteLink.invite_link;
     } catch (error) {
         console.error('Erro ao gerar link de convite:');
@@ -32,7 +32,7 @@ app.post('/webhook', async (req, res) => {
     const dataJson = req.body;
     const eventName = dataJson.event;
     
-    console.log('Evento recebido: ');
+    console.log('Event received');
 
     if (eventName === 'ping') {
         console.log('Ping received');
@@ -47,14 +47,14 @@ app.post('/webhook', async (req, res) => {
     const studentName = dataJson.data.buyer.name;
     const customerEmail = dataJson.data.buyer.email;
 
-    console.log('Nome recebido: ');
-    console.log('email recebido: ');
+    console.log('Name received');
+    console.log('email received');
 
     
     if (!customerEmail) {
         return res.status(400).send('Email do cliente não encontrado no payload');
     }
-    res.status(200).send('Webhook processado com sucesso');
+    res.status(200).send('Webhook processed');
 
     const inviteLink = await generateTelegramInviteLink(chatId);
 
@@ -67,7 +67,7 @@ app.post('/webhook', async (req, res) => {
     })
 
     const mailOptions = {
-        from: "Vitor",
+        from: 'Grupo Jmarques <sender@server.com>',
         to: customerEmail,
         subject: 'Bem-vindo ao Grupo Exclusivo de Ofertas da Jmarques!',
         html: `
@@ -107,11 +107,11 @@ app.post('/webhook', async (req, res) => {
 
     const sendEmail = async () => {
         try{
-            console.log("Enviando email")
+            console.log("Sending email")
             await transporter.sendMail(mailOptions);
-            console.log("Email enviado")
+            console.log("Email sent")
         } catch(error){
-            console.log("Erro ao enviar email")
+            console.log("Error sending email")
         }
     }
 
