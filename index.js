@@ -2,24 +2,23 @@ require('dotenv').config();
 const express = require('express');
 const nodemailer = require('nodemailer');
 const { Telegraf } = require('telegraf');
-const crypto = require('crypto');
 
 const app = express();
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 const chatId = process.env.CHAT_ID;
-const SECRET_KEY = process.env.EDUZZ_SECRET_KEY;
+
 
 app.use(express.json());
 
 async function generateTelegramInviteLink(chatId) {
     try {
         const inviteLink = await bot.telegram.createChatInviteLink(chatId, {
-            member_limit: 1,
+            member_limit: 1, 
         });
         console.log('Link gerado:', inviteLink.invite_link);
         return inviteLink.invite_link;
     } catch (error) {
-        console.error('Erro ao gerar link de convite:', error.message);
+        console.error('Erro ao gerar link de convite:');
         throw new Error('Falha ao gerar o link de convite do Telegram');
     }
 }
@@ -29,25 +28,10 @@ app.get('/webhook', (req, res) => {
 });
 
 app.post('/webhook', async (req, res) => {
-    const xSignature = req.headers['x-signature'];
-    const requestBody = JSON.stringify(req.body);
-
-    if (!xSignature) {
-        return res.status(401).json({ error: 'Unauthorized - Missing x-signature header' });
-    }
-
-    const calculatedSignature = crypto
-        .createHmac('sha256', SECRET_KEY)
-        .update(requestBody)
-        .digest('hex');
-
-    if (calculatedSignature !== xSignature) {
-        return res.status(401).json({ error: 'Unauthorized - Invalid signature' });
-    }
 
     const dataJson = req.body;
     const eventName = dataJson.event;
-
+    
     console.log('Evento recebido: ', eventName);
 
     if (eventName === 'ping') {
@@ -57,6 +41,7 @@ app.post('/webhook', async (req, res) => {
 
     if (!eventName || eventName !== 'myeduzz.invoice_paid') {
         return res.status(400).send('Evento não é invoice_paid ou está faltando no payload');
+        
     }
 
     const studentName = dataJson.data.buyer.name;
@@ -65,10 +50,10 @@ app.post('/webhook', async (req, res) => {
     console.log('Nome recebido: ', studentName);
     console.log('email recebido: ', customerEmail);
 
+    
     if (!customerEmail) {
         return res.status(400).send('Email do cliente não encontrado no payload');
     }
-
     res.status(200).send('Webhook processado com sucesso');
 
     const inviteLink = await generateTelegramInviteLink(chatId);
@@ -79,7 +64,7 @@ app.post('/webhook', async (req, res) => {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
         }
-    });
+    })
 
     const mailOptions = {
         from: "Vitor",
@@ -118,19 +103,19 @@ app.post('/webhook', async (req, res) => {
         <p>Um grande abraço,<br>
         Jmarques</p>
     `
-    };
+};
 
     const sendEmail = async () => {
-        try {
-            console.log("Enviando email");
+        try{
+            console.log("Enviando email")
             await transporter.sendMail(mailOptions);
-            console.log("Email enviado");
-        } catch (error) {
-            console.log("Erro ao enviar email:", error.message);
+            console.log("Email enviado")
+        } catch(error){
+            console.log("Erro ao enviar email")
         }
-    };
+    }
 
-    sendEmail();
+    sendEmail()
 
 });
 
@@ -142,7 +127,6 @@ app.use((req, res, next) => {
     res.status(404).send('Página não encontrada. Por favor, verifique o endereço e tente novamente.');
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server started at port: ${PORT}`);
+app.listen(process.env.PORT, () => {
+    console.log('Server started at port:'+process.env.PORT);
 });
