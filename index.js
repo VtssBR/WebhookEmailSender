@@ -119,6 +119,10 @@ app.post('/webhook', async (req, res) => {
 
 });
 
+app.get('/healthcheck', (req, res) => {
+    res.status(200).send('Servidor está ativo.');
+});
+
 app.get('/', (req, res) => {
     res.send('INICIO');
 });
