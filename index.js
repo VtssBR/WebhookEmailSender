@@ -15,7 +15,7 @@ async function generateTelegramInviteLink(chatId) {
         const inviteLink = await bot.telegram.createChatInviteLink(chatId, {
             member_limit: 1, 
         });
-        console.log('Link gerado:', inviteLink.invite_link);
+        console.log('Link gerado:');
         return inviteLink.invite_link;
     } catch (error) {
         console.error('Erro ao gerar link de convite:');
@@ -32,7 +32,7 @@ app.post('/webhook', async (req, res) => {
     const dataJson = req.body;
     const eventName = dataJson.event;
     
-    console.log('Evento recebido: ', eventName);
+    console.log('Evento recebido: ');
 
     if (eventName === 'ping') {
         console.log('Ping received');
@@ -47,8 +47,8 @@ app.post('/webhook', async (req, res) => {
     const studentName = dataJson.data.buyer.name;
     const customerEmail = dataJson.data.buyer.email;
 
-    console.log('Nome recebido: ', studentName);
-    console.log('email recebido: ', customerEmail);
+    console.log('Nome recebido: ');
+    console.log('email recebido: ');
 
     
     if (!customerEmail) {
